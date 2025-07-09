@@ -11,8 +11,10 @@ from urllib.parse import urljoin, urlparse
 import time
 
 
-# 引数： start_url = スクレイピングしたいWebサイトのURL、 max_pages = サイト内検索するページ数の上限値（デフォルト値：最大 100ページを検索）
-def website_scraping(start_url: str | None = None, max_pages=100) -> list | None:
+# 第一引数：`対象サイトのURL`, 第二引数（任意）：`検出対象ページ数`（デフォルト = 100件）, 第三引数（任意）：`検出対象は同一オリジン限定か他のドメインも含めるか`（デフォルト = `True` -> 同一オリジン限定）
+def website_scraping(
+    start_url: str | None = None, max_pages=100, is_only_same_origin: bool = True
+) -> list | None:
     if start_url is None:
         return None
 
@@ -31,7 +33,10 @@ def website_scraping(start_url: str | None = None, max_pages=100) -> list | None
         current_url = to_visit.pop(0)
 
         # 既にスクレイピング済みページの場合は処理スキップ
-        if len(visited) > 0 and current_url in visited[0]["url"]:
+        is_task_skip = any(
+            [current_url in visited_url["url"] for visited_url in visited]
+        )
+        if is_task_skip:
             continue
 
         try:
@@ -67,16 +72,27 @@ def website_scraping(start_url: str | None = None, max_pages=100) -> list | None
                 # 相対パスから生成した絶対パスを解析してURL文字列として扱う
                 parsed_url = urlparse(full_url)
 
-                # 同じドメインのHTTP/HTTPSリンクのみ
-                if (
+                # 同一ドメインのHTTP/HTTPSリンクのみ
+                is_same_origin: bool = (
                     # ドメイン名が同じ場合
                     parsed_url.netloc == base_domain
                     # かつ（当該URL文字列のプロトコルが）`http`,`https`で始まる場合
                     and parsed_url.scheme in ["http", "https"]
+                )
+
+                # 同一ドメインに加えて他のドメインも検出対象に含む場合
+                is_cross_origin: bool = parsed_url.scheme in ["http", "https"]
+
+                is_can_add_to_visit: bool = (
+                    is_same_origin
+                    if is_only_same_origin
+                    else is_cross_origin
                     # かつ未訪問（未スクレイピング）なWebページの場合（相対パスから生成した絶対パスが訪問結果履歴に含まれていない）
                     and full_url not in visited_info["url"]
                     and full_url not in to_visit
-                ):
+                )
+
+                if is_can_add_to_visit:
                     # 新しく発見したURLを訪問予定リストの末尾に追加
                     to_visit.append(full_url)
 
