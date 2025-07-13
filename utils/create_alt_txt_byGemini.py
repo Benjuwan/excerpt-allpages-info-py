@@ -39,7 +39,7 @@ def _request_Gemini(img: str, img_url: str, keyword: str) -> dict | None:
     # レスポンス内容をバイナリデータ化して画像データとして出力（開く）
     image = Image.open(BytesIO(response.content))
 
-    prompt = f"画像内に「{keyword}」という文字列が含まれている場合、画像内のどの部分に存在するか明示的に教えてください。含まれていない場合は「該当なし」という文言だけを返して処理スキップしてください。"
+    prompt = f"画像内に「{keyword}」という文字列が含まれている場合は「処理中のページURL」と「画像内のどの部分に存在するか明示的に教えて」ください。含まれていない場合は「該当なし」という文言だけを返して処理スキップしてください。"
 
     # Geminiに画像を解析してもらう
     response = model.generate_content([prompt, image])

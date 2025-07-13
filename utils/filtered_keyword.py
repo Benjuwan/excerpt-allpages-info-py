@@ -53,32 +53,38 @@ def filtered_keyword(res_text_list: list[dict] = []) -> list[dict] | None:
         )
     )
 
-    if len(filtered_keyword_list) == 0:
+    if len(filtered_keyword_list) > 0:
         print(
-            f"テキスト検出結果「{len(filtered_keyword_list)}件」だったのでページ内画像検出に移行します\n{'-' * 45}\n"
+            f"検索対象キーワード：「{keyword}」は「{len(filtered_keyword_list)}」件ヒットしました"
         )
+        return filtered_keyword_list
 
     # ページ内の文字列検出でヒットしなかった場合、ページ内の画像検出処理に移行する
-    results: list[dict] = []
-    final_result_filtered_keyword_list = (
-        filtered_keyword_list
-        if len(filtered_keyword_list) > 0
-        else list(
-            filter(
-                lambda text: _get_result_page_info_dict_list(keyword, text, results),
-                res_text_list,
-            )
-        )
+    print(
+        f"テキスト検出結果「{len(filtered_keyword_list)}件」だったのでページ内画像検出に移行します\n{'-' * 45}\n"
     )
 
-    if len(final_result_filtered_keyword_list) > 0:
-        print(
-            f"検索対象キーワード：「{keyword}」は「{len(final_result_filtered_keyword_list)}」件ヒットしました"
-        )
-        return final_result_filtered_keyword_list
+    filtered_keyword_imgs_list: list[dict] = []
+    for text in res_text_list:
+        _get_result_page_info_dict_list(keyword, text, filtered_keyword_imgs_list)
 
     print(
-        f"該当件数は「{len(final_result_filtered_keyword_list)}」件だったので全件（{len(res_text_list)}件）処理で進めます"
+        f"画像解析結果 {len(filtered_keyword_imgs_list)}件：{filtered_keyword_imgs_list}\n"
+    )
+
+    if len(filtered_keyword_imgs_list) > 0:
+        print(
+            f"検索対象キーワード：「{keyword}」は「{len(filtered_keyword_imgs_list)}」件ヒットしました"
+        )
+        return filtered_keyword_imgs_list
+
+    print(
+        f"""
+該当件数は
+「テキスト検出結果：{len(filtered_keyword_list)}件」
+「画像解析結果：{len(filtered_keyword_imgs_list)}件」だったので
+全件（{len(res_text_list)}件）処理で進めます
+"""
     )
     return None
 
