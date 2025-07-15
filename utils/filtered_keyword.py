@@ -1,6 +1,6 @@
 import requests  # webページの情報を取得する非標準ライブラリ
 
-from create_alt_txt_byGemini import create_alt_txt_byGemini
+from generate_filtered_result_byGemini import generate_filtered_result_byGemini
 
 
 # ページ内（文字列）にキーワードが含まれている場合、ページ情報を返す
@@ -22,8 +22,8 @@ def _get_result_page_info_dict_list(
     res.encoding = res.apparent_encoding  # エンコーディング処理
 
     if res.text.count(keyword) == 0:
-        images_analyze_by_Gemini_result: list[dict] | None = create_alt_txt_byGemini(
-            res.url, keyword, results
+        images_analyze_by_Gemini_result: list[dict] | None = (
+            generate_filtered_result_byGemini(res.url, keyword, results)
         )
         if images_analyze_by_Gemini_result is not None or (
             images_analyze_by_Gemini_result is not None

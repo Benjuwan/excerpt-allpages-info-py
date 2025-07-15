@@ -1,6 +1,7 @@
 # excerpt-allpages-info
 指定したWebサイトにある各種サブページの`title`,`当該ページのURLパス`を抽出する機能です。<br>
 `utils/main.py`にある`website_scraping`の引数を調整することで任意のWebサイトから上記情報を抽出できます。<br>
+
 - `website_scraping`の引数
   - 第一引数：`対象サイトのURL`<br>
   ※指定URLページ内にある`a`タグの`href`属性を基準に検出するのでTOPページを指定するのが無難
@@ -71,3 +72,6 @@ cd utils
 
 python3 main.py
 ```
+
+## 注意事項
+- ページ内の画像検出・解析の精度があまり良くない場合はモデルを切り替えて試してみてください

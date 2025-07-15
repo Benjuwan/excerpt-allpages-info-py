@@ -6,7 +6,7 @@ from openpyxl.styles import Alignment
 
 def generate_xlsx(website_scraping_result: list[dict] | None = None):
     if website_scraping_result is None:
-        print("website_scraping_result.py の処理結果が None です")
+        print("スクレイピング結果が None です")
         return
 
     # ワークブックの作成
@@ -41,7 +41,7 @@ def generate_xlsx(website_scraping_result: list[dict] | None = None):
 
     # ワークブックの保存（新規作成）
     # 同名ファイルが存在する場合は上書き保存されて、無い場合は新規作成される
-    workbook.save("../utils/website_scraping_result.xlsx")
+    workbook.save("../website_scraping_result.xlsx")
     print("エクセルファイル作成完了")
 
 
