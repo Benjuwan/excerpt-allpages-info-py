@@ -19,7 +19,7 @@ if GOOGLE_API_KEY is None:
     sys.exit("GOOGLE_API_KEY が設定されていない。または有効でないAPIキーです。")
 
 genai.configure(api_key=GOOGLE_API_KEY)
-model = genai.GenerativeModel("gemini-2.5-flash")
+model = genai.GenerativeModel("gemini-2.5-pro")
 
 
 # Gemini への処理要求
@@ -78,7 +78,7 @@ def _create_img_list(current_url: str | None = None) -> list | None:
 
 # 1. はじめに、モジュールの主要な処理を関数にまとめる
 # 実引数は呼び出し元で指定するので、仮引数としてオプショナルな指定（None）に留めておく
-def create_alt_txt_byGemini(
+def generate_filtered_result_byGemini(
     current_url: str | None = None,
     keyword: str | None = None,
     results: list[dict] | None = None,
@@ -113,13 +113,13 @@ def create_alt_txt_byGemini(
 
         # Exception：大部分の例外の基底クラス
         except Exception as e:
-            print(f"エラーが発生しました | create_alt_txt_byGemini : {e}")
+            print(f"エラーが発生しました | generate_filtered_result_byGemini.py : {e}")
             continue
 
-    print(f"create_alt_txt_byGemini ：{results}")
+    print(f"generate_filtered_result_byGemini ：{results}")
     return results
 
 
 # 2. モジュールを単独で（Pythonコマンドで）実行したときに関数を呼び出す処理を追加
 if __name__ == "__main__":
-    create_alt_txt_byGemini()
+    generate_filtered_result_byGemini()

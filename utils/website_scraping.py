@@ -99,8 +99,8 @@ def website_scraping(
             # 訪問結果履歴リストに今しがた検出した訪問結果を格納
             visited.append(visited_info)
 
-            # 1秒間処理を停止（サーバーに負荷をかけないよう配慮）
-            time.sleep(1)
+            # 0.5秒間処理を停止（サーバーに負荷をかけないよう配慮）
+            time.sleep(0.5)
 
         # 例外処理（エラーハンドリング）
         except Exception as e:
